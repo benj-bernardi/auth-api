@@ -59,3 +59,46 @@ export async function registerUser(req, res, next){
     next(err);
   }
 }
+
+export async function loginUser(req, res, next){
+  try {
+    const { email, password } = req.body
+
+    if (!email || !password){
+      return res.status(400).json({ error: "Email and Password are required" });
+    }
+
+    // Email verification 
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailRegex.test(email)){
+      return res.status(400).json({ error: "Invalid email format" });
+    }
+
+    const userExists = await pool.query("SELECT * FROM users WHERE email = $1", [email]);
+
+    if (userExists.rows.length === 0){
+      return res.status(401).json({ error: "Invalid credentials" });
+    }
+
+    const user = userExists.rows[0];
+
+    // Password verification
+    const match = await bcrypt.compare(password, user.password)
+
+    if (!match){
+      return res.status(401).json({ error: "Invalid credentials" });
+    }
+
+    res.status(200).json({
+      message: "Login successful",
+      user: {
+        id: user.id,
+        name: user.name, 
+        email: user.email
+      }
+    })
+  } catch (err){
+    next(err);
+  }
+}

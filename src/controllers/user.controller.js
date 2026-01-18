@@ -19,22 +19,32 @@ export async function registerUser(req, res, next){
     }
 
     // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!emailRegex.test(email)){
       return res.status(400).json({ error: "Invalid email format" });
     }
 
-    // Password verification
-    if (password.length < 8){
-      return res.status(400).json({ error: "Password must be at least 8 characters" });
-    }
-
     // User verification 
-    const userExists = await pool.query("SELECT * FROM users WHERE email = $1", [email]);
+    const userExists = await pool.query("SELECT 1 FROM users WHERE email = $1", [email]);
+
     if (userExists.rows.length > 0){
       return res.status(400).json({ error: "Email already registered" });
     }
+
+    const nameExists = await pool.query("SELECT 1 FROM users WHERE name = $1", [name]);
+
+    if (nameExists.rows.length > 0){
+      return res.status(400).json({ error: "Name already registred" });
+    }
+
+     // Password verification
+    const passwordRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
+
+    if (!passwordRegex.test(password)){
+      return res.status(400).json({
+        error: "Password must be at least 8 characters long and contain at least one uppercase letter and one number"})
+      }
 
     // Hash of the password
     const saltRounds = 10;

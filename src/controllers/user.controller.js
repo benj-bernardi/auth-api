@@ -1,4 +1,5 @@
 import pool from "../database/db.js";
+import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 
 export async function listUsers(req, res, next){
@@ -90,14 +91,20 @@ export async function loginUser(req, res, next){
       return res.status(401).json({ error: "Invalid credentials" });
     }
 
+    const token = jwt.sign(
+      { id: user.id }, 
+      process.env.JWT_SECRET, 
+      { expiresIn: process.env.JWT_EXPIRES_IN }
+    );
+  
     res.status(200).json({
       message: "Login successful",
-      user: {
+      token, user: {
         id: user.id,
         name: user.name, 
         email: user.email
       }
-    })
+    }) 
   } catch (err){
     next(err);
   }

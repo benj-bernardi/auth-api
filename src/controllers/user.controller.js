@@ -2,10 +2,15 @@ import pool from "../database/db.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 
-export async function listUsers(req, res, next){
+export async function getMe(req, res, next){
   try {
-    const result = await pool.query("SELECT * FROM users");
-    res.json(result.rows);
+    const userId = req.user.id;
+    const result = await pool.query("SELECT id, name, email, created_at FROM users WHERE id = $1", [userId]);
+
+    if (result.rows.length === 0){
+      return res.status(404).json({ error: "User not found" });
+    }
+    res.json(result.rows[0]);
   } catch (err){
     next(err);
   }

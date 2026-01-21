@@ -35,21 +35,21 @@ export async function registerUser(req, res, next){
     const userExists = await pool.query("SELECT 1 FROM users WHERE email = $1", [email]);
 
     if (userExists.rows.length > 0){
-      return res.status(400).json({ error: "Email already registered" });
+      return res.status(409).json({ error: "Email already registered" });
     }
 
     const nameExists = await pool.query("SELECT 1 FROM users WHERE name = $1", [name]);
 
     if (nameExists.rows.length > 0){
-      return res.status(400).json({ error: "Name already registred" });
+      return res.status(409).json({ error: "Name already registered" });
     }
 
-     // Password verification
+    // Password verification
     const passwordRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
 
     if (!passwordRegex.test(password)){
       return res.status(400).json({
-        error: "Password must be at least 8 characters long and contain at least one uppercase letter and one number"})
+        error: "Password must be at least 8 characters long and contain at least one uppercase letter and one number"});
       }
 
     // Hash of the password

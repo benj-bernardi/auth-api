@@ -59,8 +59,16 @@ export async function registerUser(req, res, next){
     const result = await pool.query(
       "INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING id, name, email",
       [name, email, hashedPassword]);
+    
+    const user = result.rows[0];
+    
+    const token = jwt.sign(
+      { id: user.id},
+      process.env.JWT_SECRET,
+      { expiresIn: process.env.JWT_EXPIRES_IN }
+    );
 
-    res.status(201).json(result.rows[0]);
+    res.status(201).json({message: "Registred successful", token});
   } catch (err){
     next(err);
   }
@@ -68,7 +76,7 @@ export async function registerUser(req, res, next){
 
 export async function loginUser(req, res, next){
   try {
-    const { email, password } = req.body
+    const { email, password } = req.body;
 
     if (!email || !password){
       return res.status(400).json({ error: "Email and Password are required" });
@@ -90,7 +98,7 @@ export async function loginUser(req, res, next){
     const user = userExists.rows[0];
 
     // Password verification
-    const match = await bcrypt.compare(password, user.password)
+    const match = await bcrypt.compare(password, user.password);
 
     if (!match){
       return res.status(401).json({ error: "Invalid credentials" });
@@ -109,7 +117,7 @@ export async function loginUser(req, res, next){
         name: user.name, 
         email: user.email
       }
-    }) 
+    });
   } catch (err){
     next(err);
   }

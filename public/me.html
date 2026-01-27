@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>My Profile</title>
+  <link rel="stylesheet" href="./css/style.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <h2>My Profile</h2>
+      <p><strong>ID:</strong> <span id="id"></span></p>
+      <p><strong>Name:</strong> <span id="name"></span></p>
+      <p><strong>Email:</strong> <span id="email"></span></p>
+
+      <button onclick="logout()">Logout</button>
+    </div>
+  </div>
+
+  <script>
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      window.location.href = "/login.html";
+    }
+
+    fetch("/users/me", {
+      headers: {
+        Authorization: "Bearer " + token
+      }
+    })
+    .then(res => {
+      if (!res.ok) throw new Error();
+      return res.json();
+    })
+    .then(user => {
+      document.getElementById("id").textContent = user.id;
+      document.getElementById("name").textContent = user.name;
+      document.getElementById("email").textContent = user.email;
+    })
+    .catch(() => {
+      localStorage.removeItem("token");
+      window.location.href = "/login.html";
+    });
+
+    function logout() {
+      localStorage.removeItem("token");
+      window.location.href = "/login.html";
+    }
+  </script>
+</body>
+</html>

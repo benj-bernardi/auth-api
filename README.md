@@ -2,7 +2,7 @@
 
 Authentication API built with **Node.js**, **Express**, and **PostgreSQL**, focused on backend best practices, security, and clean project structure.
 
-This project was created as a practical study to understand how real authentication systems work behind the scenes.
+This project was built as a hands-on study to understand how real authentication systems work behind the scenes.
 
 ---
 
@@ -94,6 +94,32 @@ Responsible middlewares:
 
 ---
 
+### Creating an Admin User
+
+By default, new users are created with the role `user`.
+
+To promote a user to admin manually:
+
+```sql
+UPDATE users SET role = 'admin' WHERE email = 'admin@email.com';
+```
+
+---
+
+## 🌐 Frontend (Demo Interface)
+
+This project includes a simple frontend built with HTML, CSS, and vanilla JavaScript for testing authentication flows.
+
+Pages included:
+
+- login.html
+- register.html
+- me.html
+
+The frontend consumes the API and stores the JWT to access protected routes.
+
+---
+
 ## ⚙️ Setup
 
 ### 1. Install dependencies
@@ -108,8 +134,26 @@ JWT_SECRET=your_secret_key
 JWT_EXPIRES_IN=1d
 DATABASE_URL=your_postgres_connection_string
 ```
+### 3. Create database and tables
 
-### 3. Run the server
+```sql
+CREATE DATABASE auth_api;
+
+\c auth_api;
+
+CREATE EXTENSION IF NOT EXISTS "pgcrypto";
+
+CREATE TABLE users (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name TEXT NOT NULL,
+  email TEXT NOT NULL UNIQUE,
+  password TEXT NOT NULL,
+  role VARCHAR(20) DEFAULT 'user',
+  created_at TIMESTAMP DEFAULT NOW()
+);
+```
+
+### 4. Run the server
 ```bash
 npm run dev
 ```
@@ -126,7 +170,7 @@ npm run dev
 
 ---
 
-## Learning Outcomes
+## 📚 Learning Outcomes
 
 During development, the following concepts were practiced:
 

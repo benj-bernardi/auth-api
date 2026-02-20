@@ -79,7 +79,7 @@ export async function loginUser(req, res, next){
         // Email format verification
         if (!isValidEmail(email)) return res.status(400).json({ error: "Invalid email format" });
 
-        const userExists = await pool.query("SELECT * FROM users WHERE email = $1", [email]);
+        const userExists = await pool.query("SELECT 1 FROM users WHERE email = $1", [email]);
 
         if (userExists.rows.length === 0){
             return res.status(401).json({ error: "Invalid credentials" });
@@ -113,7 +113,7 @@ export async function loginUser(req, res, next){
 export async function updateUser(req, res, next){
   try {
     const { name, email, password } = req.body;
-    const user_id = req.user?.id ?? req.body.id;
+    const user_id = req.user.id
 
     if (name === undefined && email === undefined && password === undefined){
       return res.status(400).json({ error: "Nothing to update" });
@@ -160,8 +160,13 @@ export async function updateUser(req, res, next){
     }
 
     const updateUser = await pool.query(
-        "UPDATE users SET name = COALESCE($1, name), email = COALESCE($2, email, password = COALESCE($3, password) WHERE id = $4",
-        [name, email, hashedPassword]);
+        `UPDATE users 
+        SET name = COALESCE($1, name),
+            email = COALESCE($2, email),
+            password = COALESCE($3, password)
+        WHERE id = $4`,
+        [name, email, hashedPassword ?? null, user_id]
+    );
     
     
     res.status(204).send();

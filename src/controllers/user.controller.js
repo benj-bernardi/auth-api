@@ -79,7 +79,7 @@ export async function loginUser(req, res, next){
         // Email format verification
         if (!isValidEmail(email)) return res.status(400).json({ error: "Invalid email format" });
 
-        const userExists = await pool.query("SELECT 1 FROM users WHERE email = $1", [email]);
+        const userExists = await pool.query("SELECT id, email, name, password, role FROM users WHERE email = $1", [email]);
 
         if (userExists.rows.length === 0){
             return res.status(401).json({ error: "Invalid credentials" });
@@ -124,7 +124,7 @@ export async function updateUser(req, res, next){
 
       const nameExists = await pool.query("SELECT 1 FROM users WHERE name = $1 AND id != $2", [name, user_id]);
       if (nameExists.rows.length > 0){
-        return res.status(400).json({ error: "Name already registered" }); 
+        return res.status(409).json({ error: "Name already registered" }); 
       }
     }
 
@@ -134,7 +134,7 @@ export async function updateUser(req, res, next){
         const userExists = await pool.query("SELECT 1 FROM users WHERE email = $1 AND id != $2", [email, user_id]);
 
         if (userExists.rows.length > 0){
-            return res.status(400).json({ error: "Email already registered" });
+            return res.status(409).json({ error: "Unable to update email" });
         }
     }
 

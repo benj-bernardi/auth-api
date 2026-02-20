@@ -1,22 +1,55 @@
-# 🔐 Auth API
+# 🔐 Auth API — Production-Ready Authentication System
 
-Authentication API built with **Node.js**, **Express**, and **PostgreSQL**, focused on backend best practices, security, and clean project structure.
+A secure and structured Authentication API built with Node.js, Express, and PostgreSQL, following real-world backend best practices.
 
-This project was built as a hands-on study to understand how real authentication systems work behind the scenes.
+This project was developed to deeply understand how production authentication systems work — focusing on security, clean architecture, and scalability.
 
 ---
 
-## 🚀 Features
+## 🚀 Core Features
 
-- User registration  
-- User login with JWT generation  
-- Password hashing with bcrypt  
-- Protected routes using middleware  
-- Role-based access control (RBAC)  
-- Authenticated user profile route  
-- Admin routes  
-- Organized project structure  
-- Global error handling  
+- User Registration
+- User Login with JWT
+- Secure Password Hashing (bcrypt)
+- JWT Authentication Middleware
+- Role-Based Access Control (RBAC)
+- Authenticated Profile Route (/me)
+- Update User Data (PATCH /me)
+- Delete Account (DELETE /me)
+- Admin-Only Routes
+- Centralized Error Handling
+- Regex-Based Input Validation
+- Modular Utilities Architecture
+
+---
+## 🧠 Architectural Decisions
+
+### 🔐 JWT (Stateless Authentication)
+
+Chosen for scalability and stateless architecture.
+No server-side session storage required.
+
+### 🔑 Password Security
+
+Passwords are:
+
+Hashed using bcrypt (12 salt rounds)
+Never returned in responses
+Validated before hashing
+
+### 🧩 Layered Structure
+
+Controllers → Business Logic
+Middlewares → Auth & Authorization
+Utils → Reusable helpers (JWT, bcrypt, regex)
+
+Database → Isolated connection logic
+
+### 🛡 Role-Based Access Control
+
+authMiddleware → Validates JWT
+authorizeRoles → Validates permissions
+Role column stored in database
 
 ---
 
@@ -28,71 +61,98 @@ This project was built as a hands-on study to understand how real authentication
 - JWT (jsonwebtoken)  
 - bcrypt  
 - ES Modules  
-- MVC Pattern  
+- MVC Pattern      
 
 ---
 
 ## 📁 Project Structure
 ```bash
-public/
-├── css/styles.css
-├── login.html
-├── me.html
-├── register.html
-
 src/
 ├── controllers/
-├── routes/
+│   ├── authController.js
+│
 ├── middlewares/
+│   ├── authMiddleware.js
+│   ├── authorizeRoles.js
+│   ├── errorHandler.js
+│
+├── utils/
+│   ├── generateToken.js
+│   ├── hashPassword.js
+│   ├── regexVerification.js
+│
 ├── database/
+│   ├── db.js
+│
+├── routes/
+│   ├── userRoutes.js
+│   ├── adminRoutes.js
+│
 ├── app.js
 └── server.js
 ```
 
 ---
 
-## 🔐 Authentication
+## 🔐 Authentication Flow
 
-The API uses **JWT (JSON Web Token)** for authentication.
+### 1️⃣ Register
 
-After login, the JWT is returned by the API and used by the frontend
-(JavaScript) to access protected routes by sending:
+Input validation
+Business validation (unique email/name)
+Password hashing
+JWT generation
 
+### 2️⃣ Login
+
+Email format validation
+Credential verification
+Password comparison
+JWT issuance
+
+### 3️⃣ Protected Routes
+
+All protected routes require:
 Authorization: Bearer <token>
 
-## 👤 User Roles
+## 👤 Role-Based Access
 
-The system uses role-based access control:
+| Role  | Access Level              |
+| ----- | ------------------------- |
+| user  | Standard protected routes |
+| admin | Administrative routes     |
 
-| Role  | Permissions |
-|------|-------------|
-| user  | Access to regular routes |
-| admin | Access to administrative routes |
+Admin routes are protected with layered middleware:
 
-Responsible middlewares:
-- `authMiddleware` → verifies token  
-- `authorizeRoles` → checks permissions  
+- Token verification
+- Role verification
 
----
+--- 
 
-## 📌 Main Routes
+## 📌 API Routes
 
-### User Routes
+### 🔓 Public
 
-| Method | Route | Description |
-|--------|-------|-------------|
-| POST | /users/register | Create account |
-| POST | /users/login | Login |
-| GET | /users/me | Get authenticated user profile |
+| Method | Route           | Description    |
+| ------ | --------------- | -------------- |
+| POST   | /users/register | Create account |
+| POST   | /users/login    | Login          |
 
-### Admin Routes
+### 🔒 Authenticated
 
-| Method | Route | Description |
-|--------|-------|-------------|
-| GET | /admin/users | List all users |
-| DELETE | /admin/users/:id | Delete user |
+| Method | Route     | Description            |
+| ------ | --------- | ---------------------- |
+| GET    | /users/me | Get authenticated user |
+| PATCH  | /users/me | Update account data    |
+| DELETE | /users/me | Delete account         |
 
----
+### 🛡 Admin
+
+| Method | Route            | Description       |
+| ------ | ---------------- | ----------------- |
+| GET    | /admin/users     | List all users    |
+| DELETE | /admin/users/:id | Delete user by ID |
+
 
 ### Creating an Admin User
 
@@ -103,20 +163,6 @@ To promote a user to admin manually:
 ```sql
 UPDATE users SET role = 'admin' WHERE email = 'admin@email.com';
 ```
-
----
-
-## 🌐 Frontend (Demo Interface)
-
-This project includes a simple frontend built with HTML, CSS, and vanilla JavaScript for testing authentication flows.
-
-Pages included:
-
-- login.html
-- register.html
-- me.html
-
-The frontend consumes the API and stores the JWT to access protected routes.
 
 ---
 
@@ -160,23 +206,57 @@ npm run dev
 
 ---
 
-## 🔒 Security Practices
+## 🔒 Security Practices Implemented
 
-- Passwords are hashed using bcrypt  
-- JWT is required to access protected routes  
-- Role-based authorization middleware  
-- Environment variables used for sensitive data  
-- Centralized error handling to avoid leaking internal details  
+- Password hashing with bcrypt
+- JWT-based authentication
+- Role-based authorization
+- Conflict-safe user validation
+- Proper HTTP status codes
+- Input validation before database operations
+- Centralized error handler
+- No password exposure in responses
 
 ---
 
-## 📚 Learning Outcomes
+## 📈 Backend Engineering Concepts Practiced
 
-During development, the following concepts were practiced:
+- Stateless authentication
+- Access control patterns
+- RESTful API design
+- Middleware chaining
+- Business rule validation
+- Secure password lifecycle
+- Proper status code semantics
+- Modular architecture
+- Separation of concerns
 
-- Full authentication flow
-- Password security
-- Express middleware
-- Route protection
-- Database integration
-- Backend project organization
+---
+
+## 🧪 Possible Future Improvements
+
+- Refresh Token rotation
+- Email verification flow
+- Rate limiting on login
+- Account lock after failed attempts
+- Docker containerization
+- Logging system (Winston / Pino)
+- Automated tests (Jest + Supertest)
+
+---
+
+## 🏆 Project Goal
+
+This project was built not as a tutorial copy, but as a backend engineering exercise focused on:
+
+- Writing clean and secure authentication logic
+- Understanding real production flows
+- Structuring scalable Express applications
+- Thinking in terms of security-first backend design
+
+---
+
+## 👨‍💻 Author
+
+Benjamin Bernardi
+Backend Developer in Progress 🚀

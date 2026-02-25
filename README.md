@@ -84,6 +84,10 @@ src/
 ├── database/
 │   ├── db.js
 │
+│── models/
+│   ├── admin.model.js
+│   ├── user.model.js
+│
 ├── routes/
 │   ├── userRoutes.js
 │   ├── adminRoutes.js

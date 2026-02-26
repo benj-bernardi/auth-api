@@ -32,7 +32,7 @@ export async function getMe(req, res, next) {
 // REGISTER
 export async function registerUser(req, res, next) {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password } = req.body || {};
 
     if (!name || !email || !password) {
       return res.status(400).json({ error: "Name, email and password are required" });
@@ -78,7 +78,7 @@ export async function registerUser(req, res, next) {
 // LOGIN
 export async function loginUser(req, res, next) {
   try {
-    const { email, password } = req.body;
+    const { email, password } = req.body || {};
 
     if (!email || !password) {
       return res.status(400).json({ error: "Email and password are required" });

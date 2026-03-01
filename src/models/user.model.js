@@ -74,7 +74,8 @@ export async function updateUserById(name, email, hashedPassword, userId) {
     `UPDATE users
      SET name = COALESCE($1, name),
          email = COALESCE($2, email),
-         password = COALESCE($3, password)
+         password = COALESCE($3, password),
+         updated_at = NOW()
      WHERE id = $4
      RETURNING id`,
     [name ?? null, email ?? null, hashedPassword ?? null, userId]

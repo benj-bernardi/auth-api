@@ -1,6 +1,7 @@
 import express from "express";
 import userRoutes from "./routes/user.routes.js";
 import adminRoutes from "./routes/admin.routes.js";
+import { errorHandler } from "./middlewares/errorHandler.js";
 
 const app = express();
 

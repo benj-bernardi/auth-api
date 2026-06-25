@@ -1,11 +1,26 @@
-import pool from "../database/db.js";
+import { getUsers, deleteUser } from "../models/admin.models.js";
 
-export async function getUsers(){
-    const getAllUsers = await pool.query("SELECT id, name, email, role, created_at, updated_at FROM users");
-    return getAllUsers.rows;
+export async function getAllUsers(req, res, next){
+    try {
+        const getallUsers = await getUsers();
+        res.json(getallUsers)
+    } catch (err){
+        next(err);
+    }
 }
 
-export async function deleteUser(id){
-    const deleteUser = await pool.query("DELETE FROM users WHERE id = $1 RETURNING id", [id]);
-    return deleteUser.rows[0];
+export async function deleteUserByID(req, res, next){
+    try {
+        const { id } = req.params;
+
+        const deleteuser = await deleteUser(id);
+
+        if (!deleteuser){
+            res.status(404).json({ error: "User not found" });
+        }
+
+        res.status(204).send();
+    } catch (err){
+        next(err);
+    }
 }

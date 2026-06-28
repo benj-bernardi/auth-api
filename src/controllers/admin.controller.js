@@ -1,19 +1,19 @@
-import { getUsers, deleteUser} from "../models/admin.model.js";
+import { getAllUsers, deleteUserByID } from "../models/admin.model.js";
 
-export async function getAllUsers(req, res, next){
+export async function getUsers(req, res, next){
     try {
-        const result = await getUsers();
+        const result = await getAllUsers();
         res.json(result);
     } catch (err){
         next(err);
     }
 }
 
-export async function deleteUserByID(req, res, next){
+export async function deleteUser(req, res, next){
     try {
         const { id } = req.params;
 
-        const deleteUserbyID = await deleteUser(id);
+        const deleteUserbyID = await deleteUserByID(id);
 
         if (!deleteUserbyID){
             return res.status(404).json({ error: "User not found" });

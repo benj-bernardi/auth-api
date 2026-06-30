@@ -1,4 +1,4 @@
-import { getUsers, deleteUser } from "../models/admin.models.js";
+import pool from "../database/db.js";
 
 export async function getAllUsers(req, res, next){
     try {

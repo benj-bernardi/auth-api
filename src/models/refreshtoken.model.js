@@ -18,7 +18,6 @@ export async function findRefreshToken(token){
     const result = await pool.query(
         "SELECT * FROM refresh_tokens WHERE token = $1", [token]);
 
-
     return result.rows[0];
 }
 
@@ -27,5 +26,5 @@ export async function deleteRefreshToken(){
     await pool.query(
         "DELETE FROM refresh_token WHERE token = $1",
         [token]
-    )
+    );
 }

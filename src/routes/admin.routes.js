@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getAllUsers, deleteUserByID } from "../controllers/admin.controller.js";
+import { getUsers, deleteUser } from "../controllers/admin.controller.js";
 import { authorizeRoles } from "../middlewares/roleMiddleware.js";
 import { authMiddleware } from "../middlewares/authMiddleware.js";
 

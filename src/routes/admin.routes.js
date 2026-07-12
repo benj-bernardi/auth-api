@@ -6,7 +6,7 @@ import { authMiddleware } from "../middlewares/authMiddleware.js";
 const router = Router();
 
 // Admin Routes
-router.get("/users", authMiddleware, authorizeRoles(["admin"]), getAllUsers);
-router.delete("/users/:id", authMiddleware, authorizeRoles(["admin"]), deleteUserByID);
+router.get("/users", authMiddleware, authorizeRoles(["admin"]), getUsers);
+router.delete("/users/:id", authMiddleware, authorizeRoles(["admin"]), deleteUser);
 
 export default router;

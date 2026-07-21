@@ -14,7 +14,23 @@ describe("Auth", () => {
         expect(res.statusCode).toBe(401);
         expect(res.body).toHaveProperty("error");
     });
-    afterAll(async () => {
-        await pool.end();
+});
+
+describe("Register", () => {
+    it("should reject invalid register by email", async () => {
+        const res = await request(app)
+            .post("/users/register")
+            .send({
+                email: "faketest.com",
+                username: "test",
+                password: "Ab1234567@"
+            });
+
+        expect(res.statusCode).toBe(400);
+        expect(res.body).toHaveProperty("error");
     });
+});
+
+afterAll(async () => {
+    await pool.end();
 });

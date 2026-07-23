@@ -24,7 +24,7 @@ export async function refreshToken(req, res, next){
         const accessToken = jwt.sign(
             { id: decoded.id },
             process.env.ACCESS_SECRET,
-            { expiresIn: "15m"}
+            { expiresIn: "15m" }
         );
 
         res.json({ accessToken });

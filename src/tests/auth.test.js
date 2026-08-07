@@ -22,8 +22,8 @@ describe("Register", () => {
             .post("/users/register")
             .send({
                 email: "faketest.com",
-                name: "test",
-                password: "Ab1234567@"
+                name: "Test12345",
+                password: "Faketest12345"
             });
 
         expect(res.statusCode).toBe(400);
@@ -37,6 +37,19 @@ describe("Register", () => {
             email: "faketest@gmail.com",
             name: "test",
             password: "Faketest12345"
+        });
+
+        expect(res.statusCode).toBe(400);
+        expect(res.body).toHaveProperty("error");
+    });
+
+    it("should reject invalid register by password", async () => {
+        const res = await request(app)
+        .post("/users/register")
+        .send({
+            email: "faketest@gmail.com",
+            name: "Test12345",
+            password: "test"
         });
 
         expect(res.statusCode).toBe(400);

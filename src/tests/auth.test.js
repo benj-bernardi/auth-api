@@ -55,6 +55,7 @@ describe("Register", () => {
         expect(res.statusCode).toBe(400);
         expect(res.body).toHaveProperty("error");
     });
+
 });
 
 afterAll(async () => {

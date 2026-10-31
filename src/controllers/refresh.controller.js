@@ -19,11 +19,11 @@ export async function refreshToken(req, res, next){
             return res.status(403).json({ error: "Refresh token expired" });
         }
 
-        const decoded = jwt.verify(token, process.env.REFRESH_SECRET);
+        const decoded = jwt.verify(token, process.env.REFRESH_TOKEN_SECRET);
 
         const accessToken = jwt.sign(
             { id: decoded.id },
-            process.env.ACCESS_SECRET,
+            process.env.ACCESS_TOKEN_SECRET,
             { expiresIn: "15m" }
         );
 

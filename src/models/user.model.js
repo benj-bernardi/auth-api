@@ -49,7 +49,6 @@ export async function createUser(name, email, hashedPassword) {
   return result.rows[0];
 }
 
-
 // UPDATE
 export async function findEmailForUpdate(email, userId) {
   const result = await pool.query(

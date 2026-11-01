@@ -34,8 +34,8 @@ describe("Register", () => {
         const res = await request(app)
         .post("/users/register")
         .send({
-            email: "faketest@gmail.com",
-            name: "test",
+            email: "username-test@gmail.com",
+            name: "te!",
             password: "Faketest12345"
         });
 
@@ -47,7 +47,7 @@ describe("Register", () => {
         const res = await request(app)
         .post("/users/register")
         .send({
-            email: "faketest@gmail.com",
+            email: "password-test@gmail.com",
             name: "Test12345",
             password: "test"
         });

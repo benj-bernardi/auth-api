@@ -1,5 +1,5 @@
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-const usernameRegex = /^[a-zA-Z0-9_]{3,20}$/;
+const usernameRegex = /^[a-zA-Z0-9\_]{3,20}$/;
 const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,64}$/;
 
 export function isValidEmail(email) {

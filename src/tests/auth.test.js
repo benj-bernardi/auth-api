@@ -14,6 +14,18 @@ describe("Auth", () => {
         expect(res.statusCode).toBe(401);
         expect(res.body).toHaveProperty("error");
     });
+
+    it("should reject invalid login by nonexistent email", async () => {
+        const res = await request(app)
+        .post("/users/login")
+        .send({
+            email: "fake.user.987@example.com",
+            password: "test"
+        });
+
+        expect(res.statusCode).toBe(401);
+        expect(res.body).toHaveProperty("error");
+    });
 });
 
 describe("Register", () => {

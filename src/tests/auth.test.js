@@ -15,6 +15,18 @@ describe("Auth", () => {
         expect(res.body).toHaveProperty("error");
     });
 
+    it("should reject login with incorrect password", async () => {
+        const res = await request(app)
+        .post("/users/login")
+        .send({
+            email: process.env.TEST_USER_EMAIL,
+            password: "WrongPassword123!"
+        });
+
+        expect(res.statusCode).toBe(401);
+        expect(res.body).toHaveProperty("error");
+    });
+
     it("should reject invalid login by nonexistent email", async () => {
         const res = await request(app)
         .post("/users/login")

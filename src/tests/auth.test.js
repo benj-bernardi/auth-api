@@ -15,6 +15,18 @@ describe("Auth", () => {
         expect(res.body).toHaveProperty("error");
     });
 
+    it("should reject login with empty email", async () => {
+        const res = await request(app)
+        .post("/users/login")
+        .send({
+            email: "",
+            password: "test"
+        });
+
+        expect(res.statusCode).toBe(400);
+        expect(res.body).toHaveProperty("error");
+    });
+
     it("should reject login with incorrect password", async () => {
         const res = await request(app)
         .post("/users/login")

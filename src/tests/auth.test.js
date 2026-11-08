@@ -104,6 +104,18 @@ describe("Register", () => {
         expect(res.body).toHaveProperty("error");
     });
 
+    it("should reject invalid register with empty email", async () => {
+        const res = await request(app)
+        .post("/users/register")
+        .send({
+            email: "",
+            name: "Test12345",
+            password: "Test12346567@"
+        });
+
+        expect(res.statusCode).toBe(400);
+        expect(res.body).toHaveProperty("error");
+    });
 });
 
 afterAll(async () => {

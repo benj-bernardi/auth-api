@@ -110,7 +110,20 @@ describe("Register", () => {
         .send({
             email: "",
             name: "Test12345",
-            password: "Test12346567@"
+            password: "Faketest12345"
+        });
+
+        expect(res.statusCode).toBe(400);
+        expect(res.body).toHaveProperty("error");
+    });
+
+    it("should reject invalid register with empty name", async () => {
+        const res = await request(app)
+        .post("/users/register")
+        .send({
+            email: "username-test@example.com",
+            name: "",
+            password: "Faketest12345"
         });
 
         expect(res.statusCode).toBe(400);

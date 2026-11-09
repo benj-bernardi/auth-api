@@ -129,6 +129,19 @@ describe("Register", () => {
         expect(res.statusCode).toBe(400);
         expect(res.body).toHaveProperty("error");
     });
+
+    it("should reject invalid register with empty password", async () => {
+        const res = await request(app)
+        .post("/users/register")
+        .send({
+            name: "password-test@example.com",
+            email: "Test12345",
+            password: ""
+        });
+
+        expect(res.statusCode).toBe(400);
+        expect(res.body).toHaveProperty("error");
+    });
 });
 
 afterAll(async () => {

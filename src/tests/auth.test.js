@@ -62,6 +62,17 @@ describe("Auth", () => {
         expect(res.statusCode).toBe(401);
         expect(res.body).toHaveProperty("error");
     });
+
+    it("should reject invalid login by missing fields", async () => {
+        const res = await request(app)
+        .post("/users/login")
+        .send({}); 
+
+        expect(res.statusCode).toBe(400);
+        expect(res.body).toHaveProperty("error");
+    });
+
+
 });
 
 describe("Register", () => {
@@ -134,14 +145,16 @@ describe("Register", () => {
         const res = await request(app)
         .post("/users/register")
         .send({
-            name: "password-test@example.com",
-            email: "Test12345",
+            name: "Test12345",
+            email: "password-test@example.com",
             password: ""
         });
 
         expect(res.statusCode).toBe(400);
         expect(res.body).toHaveProperty("error");
     });
+
+
 });
 
 afterAll(async () => {

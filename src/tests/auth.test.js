@@ -3,6 +3,18 @@ import app from "../app.js";
 import pool from "../database/db.js";
 
 describe("Auth", () => {
+    it("should accept valid login", async () => {
+        const res = await request(app)
+            .post("/users/login")
+            .send({
+                email: process.env.TEST_USER_EMAIL, 
+                password: process.env.TEST_USER_PASSWORD
+            });
+
+        expect(res.statusCode).toBe(200);
+        expect(res.body).toHaveProperty("token");
+    });
+
     it("should reject invalid login", async () => {
         const res = await request(app)
             .post("/users/login")
@@ -71,8 +83,6 @@ describe("Auth", () => {
         expect(res.statusCode).toBe(400);
         expect(res.body).toHaveProperty("error");
     });
-
-
 });
 
 describe("Register", () => {

@@ -75,6 +75,18 @@ describe("Auth", () => {
         expect(res.body).toHaveProperty("error");
     });
 
+    it("should reject login with invalid email format", async () => {
+        const res = await request(app)
+            .post("/users/login")
+            .send({
+                email: "email.com",
+                password: "TestPassword123!"
+            });
+
+        expect(res.statusCode).toBe(400);
+        expect(res.body).toHaveProperty("error");
+    });
+
     it("should reject invalid login by missing fields", async () => {
         const res = await request(app)
         .post("/users/login")
